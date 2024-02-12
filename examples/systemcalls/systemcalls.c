@@ -71,31 +71,49 @@ bool do_exec(int count, ...)
 	*
 	*/
 
+	/* Check that command is specified with an absolute path. */
+	if(command[0][0] != '/'){
+		fprintf(stderr, "Command was not specified with absolute path!\n");
+		return false;
+	}
+	
+	int status = 0;	
 	pid_t process = fork();
-	bool execStatus = true;
 	
 	if(process == -1){
 		/* Call to fork was unsucessful. */
 		perror("ERROR");
-		execStatus = false;
-	}else if(!process){
-		
+		return false;
+	}else if(process == 0){
 		/* New child process created, execute new command.*/
-		int status = execv(command[0], command);
-		exit(status);
-	}
-	else{
-		/*In parent, waiting for result.*/
-		int status = 0;
+		status = execv(command[0], command);
 		
-		if(waitpid(process, &status, 0) == -1){
-			execStatus = false;
+		/* Error with call to 'execv' */
+		if(status == -1){
+			perror("execv");
+			return false;
 		}
+		exit(EXIT_FAILURE);
+	}
+	
+	if(waitpid(process, &status, 0) == -1){
+		/* An error occurred in call to 'waitpid'*/	
+		return false;
+	}else if(WIFEXITED(status)){
+		int exit_status = WEXITSTATUS(status);
+		fflush(stdout);
+
+		/* 
+		* In Linux, successful program execution is determined by an exit code of 0, otherwise non-zero for failure.
+		* Therefore, we should return true if the status is zero and false otherwise.
+		* This is a good use of the ternary operator.
+		*/
+		return exit_status == 0 ? true : false;
 	}
 
 	va_end(args);
 
-	return execStatus;
+	return false;
 }
 
 /**
