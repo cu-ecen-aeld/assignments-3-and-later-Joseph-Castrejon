@@ -19,10 +19,10 @@ if [ ! -d "$filesdir" ]; then
 fi
 
 # Get total number of files under a directory and all sub-directories.
-x=$(find $filesdir -type f | wc --lines)
+x=$(find $filesdir -type f | wc -l)
 
 # Get matching lines containing 'searchstr' using grep.
-y=$(grep -r $searchstr $filesdir | wc --lines)
+y=$(grep -r $searchstr $filesdir | wc -l)
 
 # Print result
 printf "The number of files are $x and the number of matching lines are $y.\n"
