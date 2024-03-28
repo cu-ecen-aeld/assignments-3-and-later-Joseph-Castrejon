@@ -49,8 +49,7 @@ if [ ! -e ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ]; then
     make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE V=1 defconfig
 	
     # Build target 'all'.
-    # I have a 16-core computer.
-    make --jobs=16 ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE all
+    make --jobs=4 ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE all
     
     # Build kernel modules
     make ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE modules
@@ -96,7 +95,7 @@ fi
 
 # TODO: Make and install busybox
 echo "Building BusyBox"
-make -j16 ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE
+make -j4 ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE
 echo "Installing to root filesystem."
 make CONFIG_PREFIX="${OUTDIR}/rootfs" ARCH="${ARCH}" CROSS_COMPILE="${CROSS_COMPILE}" install
 
@@ -133,8 +132,7 @@ popd
 # TODO: Clean and build the writer utility
 printf "Building 'finder-app' located in: %s\n" "${FINDER_APP_DIR}"
 pushd "${FINDER_APP_DIR}"
-make clean
-make CROSS_COMPILE="${CROSS_COMPILE}" -j16 writer
+make CROSS_COMPILE="${CROSS_COMPILE}" -j4 writer
 
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
