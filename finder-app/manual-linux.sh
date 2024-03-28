@@ -109,15 +109,15 @@ ${CROSS_COMPILE}readelf -a bin/busybox | grep "Shared library"
 
 # TODO: Add library dependencies to rootfs
 echo "Copying library dependencies to root filesystem."
-lib_dir="/opt/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/aarch64-none-linux-gnu/libc/lib64"
+lib_dir="$(${CROSS_COMPILE}gcc --print-sysroot)"
 
-cp -v "${lib_dir}/ld-2.33.so" "${OUTDIR}/rootfs/lib64/ld-2.33.so"
+cp -v "${lib_dir}/lib64/ld-2.33.so" "${OUTDIR}/rootfs/lib64/ld-2.33.so"
 ln -s "../lib64/ld-2.33.so" "lib/ld-linux-aarch64.so.1"
-cp -v "${lib_dir}/libm-2.33.so" "${OUTDIR}/rootfs/lib64/libm-2.33.so"
+cp -v "${lib_dir}/lib64/libm-2.33.so" "${OUTDIR}/rootfs/lib64/libm-2.33.so"
 ln -s "libm-2.33.so" "lib64/libm.so.6"
-cp -v "${lib_dir}/libc-2.33.so" "${OUTDIR}/rootfs/lib64/libc-2.33.so"
+cp -v "${lib_dir}/lib64/libc-2.33.so" "${OUTDIR}/rootfs/lib64/libc-2.33.so"
 ln -s "libc-2.33.so" "lib64/libc.so.6"
-cp -v "${lib_dir}/libresolv-2.33.so" "${OUTDIR}/rootfs/lib64/libresolv-2.33.so"
+cp -v "${lib_dir}/lib64/libresolv-2.33.so" "${OUTDIR}/rootfs/lib64/libresolv-2.33.so"
 ln -s "libresolv-2.33.so" "lib64/libresolv.so.2"
 popd
 
