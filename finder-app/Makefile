@@ -8,8 +8,6 @@ OUTPUT=writer
 default:
 	$(CC) writer.c -o $(OUTPUT)			
 
-all: default
-
 clean:
 	rm writer
 
