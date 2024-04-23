@@ -5,7 +5,9 @@
 CC=$(CROSS_COMPILE)gcc
 OUTPUT=writer
 
-default: all
+.PHONY=default
+
+all: default
 
 default:
 	$(CC) writer.c -o $(OUTPUT)			
